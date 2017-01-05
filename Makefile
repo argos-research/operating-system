@@ -16,7 +16,7 @@ JENKINS_TOOLCHAIN_BUILD_DIR ?= $(JENKINS_BUILD_DIR)/toolchain-$(TOOLCHAIN_TARGET
 JENKINS_GENODE_BUILD_DIR    ?= $(JENKINS_BUILD_DIR)/genode-$(GENODE_TARGET)
 JENKINS_BUILD_CONF           = $(JENKINS_GENODE_BUILD_DIR)/etc/build.conf
 
-vagrant: ports vagrant_build_dir
+vagrant: ports build_dir
 
 jenkins: foc jenkins_build_dir
 
@@ -49,7 +49,7 @@ dde_linux:
 # ================================================================
 # Genode build process. Rebuild subtargets as needed.
 
-vagrant_build_dir:
+build_dir:
 	genode/tool/create_builddir $(GENODE_TARGET) BUILD_DIR=$(VAGRANT_GENODE_BUILD_DIR)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/repos/libports\n' >> $(VAGRANT_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-dom0-HW\n' >> $(VAGRANT_BUILD_CONF)
@@ -73,10 +73,10 @@ jenkins_build_dir:
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-AdmCtrl\n' >> $(JENKINS_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Synchronization\n' >> $(JENKINS_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/repos/dde_linux\n' >> $(JENKINS_BUILD_CONF)
-	printf 'MAKE += -j4' >> $(JENKINS_BUILD_CONF)
+	printf 'MAKE += -j' >> $(JENKINS_BUILD_CONF)
 
 # Delete build directory for all target systems. In some cases, subfolders in the contrib directory might be corrupted. Remove manually and re-prepare if necessary.
-vagrant_clean:
+clean:
 	rm -rf $(VAGRANT_BUILD_DIR)
 
 jenkins_clean:
@@ -87,7 +87,7 @@ jenkins_clean:
 
 # ================================================================
 # Run Genode with an active dom0 server.
-vagrant_run:
+run:
 	$(MAKE) -C $(VAGRANT_GENODE_BUILD_DIR) run/$(PROJECT) #declare which run file to run
 	rm -f /var/lib/tftpboot/image.elf
 	rm -f /var/lib/tftpboot/modules.list
@@ -113,5 +113,30 @@ jenkins_run:
 packages:
 	sudo apt-get update
 	sudo apt-get install libncurses5-dev texinfo autogen autoconf2.64 g++ libexpat1-dev flex bison gperf cmake libxml2-dev libtool zlib1g-dev libglib2.0-dev make pkg-config gawk subversion expect git libxml2-utils syslinux xsltproc yasm iasl lynx unzip qemu
+#
+# ================================================================
+
+# ================================================================
+# VDE setup. Do once per system session. DHCP is optional.
+vde: vde-stop
+	@vde_switch -d -s /tmp/switch1
+	@sudo vde_tunctl -u $(USER) -t tap0
+	@sudo ifconfig tap0 192.168.217.254 up
+	@sudo route add -host 192.168.217.5 dev tap0
+	@vde_plug2tap --daemon -s /tmp/switch1 tap0
+
+vde-stop:
+	@-pkill vde_switch
+	@-sudo vde_tunctl -d tap0
+	@-rm -rf /tmp/switch1
+
+dhcp: dhcp-stop
+	@slirpvde -d -s /tmp/switch1 -dhcp
+
+dhcp-stop:
+	@-pkill slirpvde
+
+# Cleanup network shenanigans.
+clean-network: dhcp-stop vde-stop
 #
 # ================================================================
