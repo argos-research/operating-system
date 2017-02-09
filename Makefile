@@ -1,4 +1,4 @@
-PROJECT		?= dom0-HW
+PROJECT		?= sched_controller
 
 # options: x86 arm
 TOOLCHAIN_TARGET    ?= arm
@@ -121,8 +121,8 @@ packages:
 vde: vde-stop
 	@vde_switch -d -s /tmp/switch1
 	@sudo vde_tunctl -u $(USER) -t tap0
-	@sudo ifconfig tap0 192.168.217.254 up
-	@sudo route add -host 192.168.217.5 dev tap0
+	@sudo ifconfig tap0 192.168.217.20 up
+	@sudo route add -host 192.168.217.21 dev tap0
 	@vde_plug2tap --daemon -s /tmp/switch1 tap0
 
 vde-stop:
