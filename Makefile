@@ -4,7 +4,7 @@ PROJECT		?= sched_controller
 TOOLCHAIN_TARGET    ?= arm
 
 # options: see tool/create_builddir
-GENODE_TARGET       ?= focnados_panda
+GENODE_TARGET       ?= focnados_pbxa9
 
 VAGRANT_BUILD_DIR           ?= /build
 VAGRANT_TOOLCHAIN_BUILD_DIR ?= $(VAGRANT_BUILD_DIR)/toolchain-$(TOOLCHAIN_TARGET)
@@ -92,19 +92,19 @@ run:
 	rm -f /var/lib/tftpboot/image.elf
 	rm -f /var/lib/tftpboot/modules.list
 	rm -rf /var/lib/tftpboot/genode
-	cp $(VAGRANT_BUILD_DIR)/genode-focnados_panda/var/run/$(PROJECT)/image.elf /var/lib/tftpboot/
-	cp $(VAGRANT_BUILD_DIR)/genode-focnados_panda/var/run/$(PROJECT)/modules.list /var/lib/tftpboot/
-	cp -R $(VAGRANT_BUILD_DIR)/genode-focnados_panda/var/run/$(PROJECT)/genode /var/lib/tftpboot/
+	cp $(VAGRANT_GENODE_BUILD_DIR)/var/run/$(PROJECT)/image.elf /var/lib/tftpboot/
+	cp $(VAGRANT_GENODE_BUILD_DIR)/var/run/$(PROJECT)/modules.list /var/lib/tftpboot/
+	cp -R $(VAGRANT_GENODE_BUILD_DIR)/var/run/$(PROJECT)/genode /var/lib/tftpboot/
 
 jenkins_run:
 	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) run/$(PROJECT) #declare which run file to run
 	rm -f /var/lib/tftpboot/image.elf
 	rm -f /var/lib/tftpboot/modules.list
 	rm -rf /var/lib/tftpboot/genode
-	cp $(JENKINS_BUILD_DIR)/genode-focnados_panda/var/run/$(PROJECT)/image.elf /var/lib/tftpboot/
-	cp $(JENKINS_BUILD_DIR)/genode-focnados_panda/var/run/$(PROJECT)/modules.list /var/lib/tftpboot/
-	cp -R $(JENKINS_BUILD_DIR)/genode-focnados_panda/var/run/$(PROJECT)/genode /var/lib/tftpboot/
-	
+	cp $(JENKINS_GENODE_BUILD_DIR)/var/run/$(PROJECT)/image.elf /var/lib/tftpboot/
+	cp $(JENKINS_GENODE_BUILD_DIR)/var/run/$(PROJECT)/modules.list /var/lib/tftpboot/
+	cp -R $(JENKINS_GENODE_BUILD_DIR)/var/run/$(PROJECT)/genode /var/lib/tftpboot/
+
 #
 # ================================================================
 

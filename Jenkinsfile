@@ -6,7 +6,7 @@ node {
       // Get some code from a GitHub repository
       // Could possibly be obsolete, will further investigate when isnan/inf bug is fixed
       checkout scm
-      //git branch: 'master', url: 'https://github.com/argos-research/operating-system.git'  
+      //git branch: 'master', url: 'https://github.com/argos-research/operating-system.git'
       //git submodule init
       //git submodule update
       //Preparing build
@@ -26,7 +26,7 @@ node {
       sh "cp -R log/* /home/bliening/ownCloud/702nados/log/${env.JOB_NAME}/${env.BUILD_NUMBER}/"
       mattermostSend color: "#439FE0", message: "Build Finished: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
       // should be with specific channel
-      
+
    }
    //Here tests or other stuff would appear
 }
