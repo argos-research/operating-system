@@ -1,4 +1,4 @@
-PROJECT		?= sched_controller
+PROJECT		?= dom0-HW
 
 # options: x86 arm
 TOOLCHAIN_TARGET    ?= arm
@@ -73,7 +73,7 @@ jenkins_build_dir:
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-AdmCtrl\n' >> $(JENKINS_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Synchronization\n' >> $(JENKINS_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/repos/dde_linux\n' >> $(JENKINS_BUILD_CONF)
-	printf 'MAKE += -j' >> $(JENKINS_BUILD_CONF)
+	printf 'MAKE += -j8' >> $(JENKINS_BUILD_CONF)
 
 # Delete build directory for all target systems. In some cases, subfolders in the contrib directory might be corrupted. Remove manually and re-prepare if necessary.
 clean:
