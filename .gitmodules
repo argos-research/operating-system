@@ -26,3 +26,6 @@
 [submodule "genode-AdmCtrl"]
 	path = genode-AdmCtrl
 	url = https://github.com/argos-research/genode-AdmCtrl
+[submodule "genode-Utilization"]
+	path = genode-Utilization
+	url = https://github.com/argos-research/genode-Utilization
