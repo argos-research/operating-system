@@ -8,6 +8,8 @@ pipeline {
         sh 'wget https://nextcloud.os.in.tum.de/s/KVfFOeRXVszFROl/download --no-check-certificate -O libports.tar.bz2'
         sh 'tar xvjC genode/ -f libports.tar.bz2'
         sh 'make ports'
+        // for check in run files
+        sh 'export ON_JENKINS="true"'
       }
     }
     stage('Build') {
