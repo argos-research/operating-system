@@ -23,15 +23,16 @@ pipeline {
       // should be with specific channel
       }
     }
-    post {
-      failure {
-        mattermostSend color: "#E01818", message: "Build Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER} ${env.BUILD_URL}"
-      }
-      success {
-        mattermostSend color: "#3cc435", message: "Build Successful: ${env.JOB_NAME} ${env.BUILD_NUMBER} ${env.BUILD_URL}"
-      }
-      always {
-        deleteDir()
-      }
-    }
-}
+  } // stages ends here
+  post {
+   failure {
+    mattermostSend color: "#E01818", message: "Build Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER} ${env.BUILD_URL}"
+   }
+   success {
+     mattermostSend color: "#3cc435", message: "Build Successful: ${env.JOB_NAME} ${env.BUILD_NUMBER} ${env.BUILD_URL}"
+   }
+   always {
+     deleteDir()
+   }
+  } // post ends here
+} // pipeline ends here
