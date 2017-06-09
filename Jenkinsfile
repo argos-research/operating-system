@@ -1,6 +1,6 @@
 #!groovy
 pipeline {
-  agent any
+ agent any
   stages {
     stage('Prepare') {
       steps {
@@ -22,17 +22,16 @@ pipeline {
       //sh "cp -R log/* /home/bliening/ownCloud/702nados/log/${env.JOB_NAME}/${env.BUILD_NUMBER}/"
       // should be with specific channel
       }
-   }
-  }
-  post {
-    failure {
-      mattermostSend color: "#E01818", message: "Build Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER} ${env.BUILD_URL}"
     }
-    success {
-      mattermostSend color: "#3cc435", message: "Build Successful: ${env.JOB_NAME} ${env.BUILD_NUMBER} ${env.BUILD_URL}"
+    post {
+      failure {
+        mattermostSend color: "#E01818", message: "Build Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER} ${env.BUILD_URL}"
+      }
+      success {
+        mattermostSend color: "#3cc435", message: "Build Successful: ${env.JOB_NAME} ${env.BUILD_NUMBER} ${env.BUILD_URL}"
+      }
+      always {
+        deleteDir()
+      }
     }
-    always {
-      deleteDir()
-    }
-  }
 }
