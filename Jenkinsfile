@@ -1,32 +1,39 @@
-node {
-   stage('Preparation') { // for display purposes
-      sh "make jenkins_clean"
-      sh "rm -rf log"
-      //sh "rm -rf genode/contrib"
-      // Get some code from a GitHub repository
-      // Could possibly be obsolete, will further investigate when isnan/inf bug is fixed
-      checkout scm
-      //git branch: 'master', url: 'https://github.com/argos-research/operating-system.git'
-      //git submodule init
-      //git submodule update
-      //Preparing build
-      //sh "wget https://nextcloud.os.in.tum.de/s/KVfFOeRXVszFROl/download --no-check-certificate -O libports.tar.bz2"
-      //sh "tar xvjC genode/ -f libports.tar.bz2"
-      sh "mkdir -p log"
-      sh "touch log/prepare.log"
-      sh "make jenkins > log/prepare.log 2>&1"
-      sh "touch log/make.log"
-   }
-   stage('Build') {
-      // Run the build of dom0-HW
-      sh "make jenkins_run > log/make.log 2>&1"
-   }
-   stage('Notifications') {
-      sh "mkdir -p /home/bliening/ownCloud/702nados/log/${env.JOB_NAME}/${env.BUILD_NUMBER}"
-      sh "cp -R log/* /home/bliening/ownCloud/702nados/log/${env.JOB_NAME}/${env.BUILD_NUMBER}/"
-      mattermostSend color: "#439FE0", message: "Build Finished: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+#!groovy
+pipeline {
+ agent any
+  stages {
+    stage('Prepare') {
+      steps {
+        sh 'git submodule update --init'
+        sh 'wget https://nextcloud.os.in.tum.de/s/KVfFOeRXVszFROl/download --no-check-certificate -O libports.tar.bz2'
+        sh 'tar xvjC genode/ -f libports.tar.bz2'
+        sh 'make ports'
+      }
+    }
+    stage('Build') {
+      steps {
+        sh 'make jenkins_build_dir'
+        sh 'make jenkins_run'
+      }
+    }
+    stage('Notifications') {
+      steps {
+       sh 'echo store log on cloud'
+      //sh "mkdir -p /home/bliening/ownCloud/702nados/log/${env.JOB_NAME}/${env.BUILD_NUMBER}"
+      //sh "cp -R log/* /home/bliening/ownCloud/702nados/log/${env.JOB_NAME}/${env.BUILD_NUMBER}/"
       // should be with specific channel
-
+      }
+    }
+  } // stages ends here
+  post {
+   failure {
+    mattermostSend color: "#E01818", message: "Build Failed: [${env.JOB_NAME} ${env.BUILD_NUMBER}](${env.BUILD_URL})"
    }
-   //Here tests or other stuff would appear
-}
+   success {
+    mattermostSend color: "#3cc435", message: "Build Successful: [${env.JOB_NAME} ${env.BUILD_NUMBER}](${env.BUILD_URL})"
+   }
+   always {
+     deleteDir()
+   }
+  } // post ends here
+} // pipeline ends here
