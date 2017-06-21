@@ -75,14 +75,14 @@ jenkins_build_dir:
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Synchronization\n' >> $(JENKINS_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Utilization\n' >> $(JENKINS_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/repos/dde_linux\n' >> $(JENKINS_BUILD_CONF)
-	printf 'MAKE += -j8' >> $(JENKINS_BUILD_CONF)
+	printf 'MAKE += -j' >> $(JENKINS_BUILD_CONF)
 
 # Delete build directory for all target systems. In some cases, subfolders in the contrib directory might be corrupted. Remove manually and re-prepare if necessary.
 clean:
-	rm -rf $(VAGRANT_BUILD_DIR)
+	rm -rf $(VAGRANT_GENODE_BUILD_DIR)
 
 jenkins_clean:
-	rm -rf $(JENKINS_BUILD_DIR)
+	rm -rf $(JENKINS_GENODE_BUILD_DIR)
 #
 # ================================================================
 
