@@ -1,4 +1,4 @@
-
+#!/bin/bash
 #######################
 #
 # This is a provision script
