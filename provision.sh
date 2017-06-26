@@ -26,6 +26,7 @@ git submodule update --init
 wget -nc --quiet https://sourceforge.net/projects/genode/files/genode-toolchain/15.05/genode-toolchain-15.05-x86_64.tar.bz2/download -O genode-toolchain-15.05-x86_64.tar.bz2
 if [ $(groups | grep -o "if13praktikum") ]; then
   tar xfj genode-toolchain-15.05-x86_64.tar.bz2 -C /var/tmp
+  chmod g+w /var/tmp/usr/
 else
   sudo tar xPfj genode-toolchain-15.05-x86_64.tar.bz2
 fi
