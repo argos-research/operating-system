@@ -6,10 +6,15 @@ TOOLCHAIN_TARGET    ?= arm
 # options: see tool/create_builddir
 GENODE_TARGET       ?= focnados_pbxa9
 
-VAGRANT_BUILD_DIR           ?= /build
+ifneq (,$(findstring if13praktikum, $(groups)))
+	VAGRANT_BUILD_DIR         ?= /var/tmp/build
+else
+	VAGRANT_BUILD_DIR         ?= /build
+endif
 VAGRANT_TOOLCHAIN_BUILD_DIR ?= $(VAGRANT_BUILD_DIR)/toolchain-$(TOOLCHAIN_TARGET)
 VAGRANT_GENODE_BUILD_DIR    ?= $(VAGRANT_BUILD_DIR)/genode-$(GENODE_TARGET)
 VAGRANT_BUILD_CONF           = $(VAGRANT_GENODE_BUILD_DIR)/etc/build.conf
+VAGRANT_TOOLS_CONF           = $(VAGRANT_GENODE_BUILD_DIR)/etc/tools.conf
 
 JENKINS_BUILD_DIR           ?= build
 JENKINS_TOOLCHAIN_BUILD_DIR ?= $(JENKINS_BUILD_DIR)/toolchain-$(TOOLCHAIN_TARGET)
@@ -62,6 +67,9 @@ build_dir:
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Utilization\n' >> $(VAGRANT_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/repos/dde_linux\n' >> $(VAGRANT_BUILD_CONF)
 	printf 'MAKE += -j4' >> $(VAGRANT_BUILD_CONF)
+ifneq (,$(findstring if13praktikum, $(groups)))
+	printf 'CROSS_DEV_PREFIX=/var/tmp/usr/local/genode-gcc/bin/genode-arm-\n' >> $(VAGRANT_TOOLS_CONF)
+endif
 
 jenkins_build_dir:
 	genode/tool/create_builddir $(GENODE_TARGET) BUILD_DIR=$(JENKINS_GENODE_BUILD_DIR)
