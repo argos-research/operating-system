@@ -24,14 +24,14 @@ rm -rf genode/contrib/
 git submodule update --init
 # download and extract toolchain
 wget -nc --quiet https://sourceforge.net/projects/genode/files/genode-toolchain/15.05/genode-toolchain-15.05-x86_64.tar.bz2/download -O genode-toolchain-15.05-x86_64.tar.bz2
-if [ $(groups | grep "if13praktikum") ]; then
-  tar xfjC /var/tmp genode-toolchain-15.05-x86_64.tar.bz2
+if [ $(groups | grep -o "if13praktikum") ]; then
+  tar xfj genode-toolchain-15.05-x86_64.tar.bz2 -C /var/tmp
 else
   sudo tar xPfj genode-toolchain-15.05-x86_64.tar.bz2
 fi
 # download and extract libports
 wget -nc --quiet https://nextcloud.os.in.tum.de/s/KVfFOeRXVszFROl/download -O libports.tar.bz2
-tar xvjC genode/ -f libports.tar.bz2
+tar xfj libports.tar.bz2 -C genode
 # prepare ports, ...
 if [ $USER == "ubuntu" ]; then
   sudo make vagrant

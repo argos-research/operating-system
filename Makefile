@@ -6,8 +6,8 @@ TOOLCHAIN_TARGET    ?= arm
 # options: see tool/create_builddir
 GENODE_TARGET       ?= focnados_pbxa9
 
-ifneq (,$(findstring if13praktikum, $(groups)))
-	VAGRANT_BUILD_DIR         ?= /var/tmp/build
+ifeq (,$(findstring "if13praktikum", $(groups)))
+	VAGRANT_BUILD_DIR         ?= $(shell pwd)/build
 else
 	VAGRANT_BUILD_DIR         ?= /build
 endif
@@ -67,7 +67,7 @@ build_dir:
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Utilization\n' >> $(VAGRANT_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/repos/dde_linux\n' >> $(VAGRANT_BUILD_CONF)
 	printf 'MAKE += -j4' >> $(VAGRANT_BUILD_CONF)
-ifneq (,$(findstring if13praktikum, $(groups)))
+ifeq (,$(findstring if13praktikum, $(groups)))
 	printf 'CROSS_DEV_PREFIX=/var/tmp/usr/local/genode-gcc/bin/genode-arm-\n' >> $(VAGRANT_TOOLS_CONF)
 endif
 
