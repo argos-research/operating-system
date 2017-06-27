@@ -11,7 +11,12 @@
 if [ $USER == "ubuntu" ]; then
   sudo apt-get update -qq
   sudo apt-get upgrade -qq
-  sudo apt-get install libncurses5-dev texinfo autogen autoconf2.64 g++ libexpat1-dev flex bison gperf cmake libxml2-dev libtool zlib1g-dev libglib2.0-dev make pkg-config gawk subversion expect git libxml2-utils syslinux xsltproc yasm iasl lynx unzip qemu alsa-base alsa-utils pulseaudio pulseaudio-utils ubuntu-desktop tftpd-hpa -qq
+  sudo apt-get install libncurses5-dev texinfo autogen autoconf2.64 g++ \
+  libexpat1-dev flex bison gperf cmake libxml2-dev libtool zlib1g-dev \
+  libglib2.0-dev make pkg-config gawk subversion expect git libxml2-utils \
+  syslinux xsltproc yasm iasl lynx unzip qemu tftpd-hpa -qq
+  # uncomment the following line if you want to 'visually' access the virtual machine
+  #sudo apt-get install alsa-base alsa-utils pulseaudio pulseaudio-utils ubuntu-desktop
 fi
 
 # change directory to /vagrant
@@ -33,27 +38,28 @@ fi
 # download and extract libports
 wget -nc --quiet https://nextcloud.os.in.tum.de/s/KVfFOeRXVszFROl/download -O libports.tar.bz2
 tar xfj libports.tar.bz2 -C genode
-# prepare ports, ...
 if [ $USER == "ubuntu" ]; then
+  # prepare ports, ...
   sudo make vagrant
+  # change owner of /build
+  sudo chown -R ubuntu /build
+  # change password of user ubuntu to vagrant
+  echo ubuntu:vagrant | sudo chpasswd
 else
+  # prepare ports, ...
   make vagrant
 fi
 
-if [ $USER == "ubuntu" ]; then
-  # change password of user ubuntu to vagrant
-  echo ubuntu:vagrant | sudo chpasswd
+if [ $(groups | grep -o "if13praktikum") ]; then
+  echo Adding /usr/local/dist/DIR/f13 to PATH
+  export PATH=/usr/local/dist/DIR/f13:$PATH
+  echo New path is: $PATH
+
+  echo ----------------------------------------------------------------------------
+  echo All preparation should have been made successful
+  echo If you want to run the program you just created please run make vde and make run
+  echo make vde: Generates the network
+  echo make run: Runs the programm, please ensure to use make vde if you are in need of a virtual network for you project
+  echo To run an ftpd server you authbind --deep /usr/local/dist/DIR/f13/in.tftpd -l \<location of \*.elf\>
+  echo ----------------------------------------------------------------------------
 fi
-
-echo Getting new PATH=/usr/local/dist/DIR/f13 
-export PATH=/usr/local/dist/DIR/f13:$PATH
-echo New path is: $PATH
-
-echo ----------------------------------------------------------------------------
-echo All preparation should have been made successful
-echo If you want to run the program you just created please run make vde and make run
-echo make vde: Generates the network, see more in the Makefile requires SUDO
-echo make run: Runs the programm, please ensure to use make vde if you are in need of a virtual network for you project
-echo To run an ftpd server you authbind --deep /usr/local/dist/DIR/f13/in.tftpd -l /var/tmp/FolderWithImages
-echo ----------------------------------------------------------------------------
-
