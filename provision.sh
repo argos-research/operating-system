@@ -44,3 +44,16 @@ if [ $USER == "ubuntu" ]; then
   # change password of user ubuntu to vagrant
   echo ubuntu:vagrant | sudo chpasswd
 fi
+
+echo Getting new PATH=/usr/local/dist/DIR/f13 
+export PATH=/usr/local/dist/DIR/f13:$PATH
+echo New path is: $PATH
+
+echo ----------------------------------------------------------------------------
+echo All preparation should have been made successful
+echo If you want to run the program you just created please run make vde and make run
+echo make vde: Generates the network, see more in the Makefile requires SUDO
+echo make run: Runs the programm, please ensure to use make vde if you are in need of a virtual network for you project
+echo To run an ftpd server you authbind --deep /usr/local/dist/DIR/f13/in.tftpd -l /var/tmp/FolderWithImages
+echo ----------------------------------------------------------------------------
+
