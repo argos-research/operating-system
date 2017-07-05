@@ -12,11 +12,7 @@ pipeline {
 	sh 'make jenkins_build_dir'
 	sh "touch build/genode-focnados_pbxa9/etc/tools.conf >> log/prepare.log.txt 2>&1"
 	sh "echo CROSS_DEV_PREFIX=\$(pwd)/usr/local/genode-gcc/bin/genode-arm- >> build/genode-focnados_pbxa9/etc/tools.conf"
-        sh './genode/tool/ports/prepare_port focnados >> log/prepare.log.txt 2>&1' // focnados
-        sh './genode/tool/ports/prepare_port libc >> log/prepare.log.txt 2>&1'
-        sh './genode/tool/ports/prepare_port lwip >> log/prepare.log.txt 2>&1'
-	sh './genode/tool/ports/prepare_port stdcxx >> log/prepare.log.txt 2>&1'
-	sh './genode/tool/ports/prepare_port dde_linux >> log/prepare.log.txt 2>&1'
+        sh "make ports >> log/prepare.log.txt 2>&1"
       }
     }
     stage('Build') {

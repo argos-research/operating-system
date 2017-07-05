@@ -40,13 +40,15 @@ toolchain:
 ports: foc libports dde_linux
 
 foc:
-	$(MAKE) -C genode/repos/base-focnados prepare
+	./genode/tool/ports/prepare_port focnados
 
 libports:
-	$(MAKE) -C genode/repos/libports prepare
+	./genode/tool/ports/prepare_port libc
+	./genode/tool/ports/prepare_port lwip
+	./genode/tool/ports/prepare_port stdcxx
 
 dde_linux:
-	$(MAKE) -C genode/repos/dde_linux prepare
+	./genode/tool/ports/prepare_port dde_linux
 #
 # ================================================================
 
