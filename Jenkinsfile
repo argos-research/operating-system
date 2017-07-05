@@ -9,7 +9,7 @@ pipeline {
         sh "git submodule update --init > log/prepare.log.txt 2>&1"
 	sh "wget https://sourceforge.net/projects/genode/files/genode-toolchain/16.05/genode-toolchain-16.05-x86_64.tar.bz2 >> log/prepare.log.txt 2>&1"
 	sh "tar xfj genode-toolchain-16.05-x86_64.tar.bz2 -C . >> log/prepare.log.txt 2>&1"
-	sh "echo CROSS_DEV_PREFIX=$(pwd)/usr/local/genode-gcc/bin/genode-arm- >> genode/build/focnados_pbxa9/etc/tools.conf"
+	sh "echo CROSS_DEV_PREFIX=\$(pwd)/usr/local/genode-gcc/bin/genode-arm- >> genode/build/focnados_pbxa9/etc/tools.conf"
         sh "make ports >> log/prepare.log.txt 2>&1"
       }
     }
