@@ -4,7 +4,7 @@ PROJECT		?= dom0-HW
 TOOLCHAIN_TARGET    ?= arm
 
 # options: see tool/create_builddir
-GENODE_TARGET       ?= focnados_pbxa9
+GENODE_TARGET       ?= focnados_panda
 
 ifneq (,$(findstring if13praktikum, $(shell groups)))
 	VAGRANT_BUILD_DIR         ?= $(shell pwd)/build
@@ -30,8 +30,8 @@ jenkins: foc jenkins_build_dir
 # ================================================================
 # Genode toolchain. Only needs to be done once per target (x86/arm).
 toolchain:
-	wget https://nextcloud.os.in.tum.de/s/QaJM5IPYoZ2RNXW/download
-	tar xfj download -C .
+	wget https://nextcloud.os.in.tum.de/s/QaJM5IPYoZ2RNXW/download -O toolchain
+	tar xfj toolchain -C .
 #
 # ================================================================
 
