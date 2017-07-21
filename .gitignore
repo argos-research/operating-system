@@ -4,6 +4,7 @@
 *.rej
 
 genode-*
+download*
 
 /usr
 /build
