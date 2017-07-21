@@ -7,8 +7,8 @@ pipeline {
         sh "mkdir -p log"
         sh "touch log/prepare.log.txt"
         sh "git submodule update --init > log/prepare.log.txt 2>&1"
-        sh "wget https://nextcloud.os.in.tum.de/s/KVfFOeRXVszFROl/download --no-check-certificate -O libports.tar.bz2 >> log/prepare.log.txt 2>&1"
-        sh "tar xvjC genode/ -f libports.tar.bz2 >> log/prepare.log.txt 2>&1"
+        #sh "wget https://nextcloud.os.in.tum.de/s/KVfFOeRXVszFROl/download --no-check-certificate -O libports.tar.bz2 >> log/prepare.log.txt 2>&1"
+        #sh "tar xvjC genode/ -f libports.tar.bz2 >> log/prepare.log.txt 2>&1"
         sh "make ports >> log/prepare.log.txt 2>&1"
       }
     }
