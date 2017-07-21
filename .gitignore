@@ -5,6 +5,7 @@
 
 genode-*
 download*
+toolchain*
 
 /usr
 /build
