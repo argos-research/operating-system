@@ -3,6 +3,9 @@
 *.swp
 *.rej
 
+genode-*
+
+/usr
 /build
 /contrib
 /repos/base-codezero/contrib

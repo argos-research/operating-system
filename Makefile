@@ -20,6 +20,8 @@ JENKINS_BUILD_DIR           ?= build
 JENKINS_TOOLCHAIN_BUILD_DIR ?= $(JENKINS_BUILD_DIR)/toolchain-$(TOOLCHAIN_TARGET)
 JENKINS_GENODE_BUILD_DIR    ?= $(JENKINS_BUILD_DIR)/genode-$(GENODE_TARGET)
 JENKINS_BUILD_CONF           = $(JENKINS_GENODE_BUILD_DIR)/etc/build.conf
+JENKINS_TOOLS_CONF           = $(JENKINS_GENODE_BUILD_DIR)/etc/tools.conf
+
 
 vagrant: ports build_dir
 
@@ -28,9 +30,8 @@ jenkins: foc jenkins_build_dir
 # ================================================================
 # Genode toolchain. Only needs to be done once per target (x86/arm).
 toolchain:
-	mkdir -p $(VAGRANT_TOOLCHAIN_BUILD_DIR)
-	cd $(VAGRANT_TOOLCHAIN_BUILD_DIR);\
-	genode/tool/tool_chain $(TOOLCHAIN_TARGET)
+	wget https://sourceforge.net/projects/genode/files/genode-toolchain/15.05/genode-toolchain-15.05-x86_64.tar.bz2
+	tar xfj genode-toolchain-15.05-x86_64.tar.bz2 -C .
 #
 # ================================================================
 
@@ -40,13 +41,15 @@ toolchain:
 ports: foc libports dde_linux
 
 foc:
-	$(MAKE) -C genode/repos/base-focnados prepare
+	./genode/tool/ports/prepare_port focnados
 
 libports:
-	$(MAKE) -C genode/repos/libports prepare
+	./genode/tool/ports/prepare_port libc
+	./genode/tool/ports/prepare_port stdcxx
+	./genode/tool/ports/prepare_port lwip
 
 dde_linux:
-	$(MAKE) -C genode/repos/dde_linux prepare
+	./genode/tool/ports/prepare_port dde_linux
 #
 # ================================================================
 
@@ -84,6 +87,8 @@ jenkins_build_dir:
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Utilization\n' >> $(JENKINS_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/repos/dde_linux\n' >> $(JENKINS_BUILD_CONF)
 	printf 'MAKE += -j' >> $(JENKINS_BUILD_CONF)
+	echo "CROSS_DEV_PREFIX=$(shell pwd)/usr/local/genode-gcc/bin/genode-arm-" >> $(JENKINS_TOOLS_CONF)
+
 
 # Delete build directory for all target systems. In some cases, subfolders in the contrib directory might be corrupted. Remove manually and re-prepare if necessary.
 clean:
