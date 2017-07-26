@@ -134,7 +134,9 @@ packages:
 # ================================================================
 # VDE setup. Do once per system session. DHCP is optional.
 vde: vde-stop
-	@vde_switch -d -s /tmp/switch1
+	#See what going on on the switch with command vdeterm /tmp/mgmt
+	#then call port/allprint to see what is on the ports 
+	@vde_switch -d -s /tmp/switch1 -M /tmp/mgmt
 	@sudo vde_tunctl -u $(USER) -t tap0
 	@sudo ifconfig tap0 192.168.217.20 up
 	@sudo route add -host 192.168.217.21 dev tap0
