@@ -4,7 +4,7 @@ PROJECT		?= dom0-HW
 TOOLCHAIN_TARGET    ?= arm
 
 # options: see tool/create_builddir
-GENODE_TARGET       ?= focnados_pbxa9
+GENODE_TARGET       ?= focnados_panda
 
 ifneq (,$(findstring if13praktikum, $(shell groups)))
 	VAGRANT_BUILD_DIR         ?= $(shell pwd)/build
@@ -20,6 +20,7 @@ JENKINS_BUILD_DIR           ?= build
 JENKINS_TOOLCHAIN_BUILD_DIR ?= $(JENKINS_BUILD_DIR)/toolchain-$(TOOLCHAIN_TARGET)
 JENKINS_GENODE_BUILD_DIR    ?= $(JENKINS_BUILD_DIR)/genode-$(GENODE_TARGET)
 JENKINS_BUILD_CONF           = $(JENKINS_GENODE_BUILD_DIR)/etc/build.conf
+JENKINS_TOOLS_CONF = $(JENKINS_GENODE_BUILD_DIR)/etc/tools.conf
 
 vagrant: ports build_dir
 
@@ -28,9 +29,8 @@ jenkins: foc jenkins_build_dir
 # ================================================================
 # Genode toolchain. Only needs to be done once per target (x86/arm).
 toolchain:
-	mkdir -p $(VAGRANT_TOOLCHAIN_BUILD_DIR)
-	cd $(VAGRANT_TOOLCHAIN_BUILD_DIR);\
-	genode/tool/tool_chain $(TOOLCHAIN_TARGET)
+	wget https://nextcloud.os.in.tum.de/s/9idiw8BLbuwp35z/download -O toolchain
+	tar xfj toolchain -C .
 #
 # ================================================================
 
@@ -86,6 +86,8 @@ jenkins_build_dir:
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Utilization\n' >> $(JENKINS_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/repos/dde_linux\n' >> $(JENKINS_BUILD_CONF)
 	printf 'MAKE += -j' >> $(JENKINS_BUILD_CONF)
+	echo "CROSS_DEV_PREFIX=$(shell pwd)/usr/local/genode-gcc/bin/genode-arm-" >> $(JENKINS_TOOLS_CONF)
+
 
 # Delete build directory for all target systems. In some cases, subfolders in the contrib directory might be corrupted. Remove manually and re-prepare if necessary.
 clean:
