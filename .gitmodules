@@ -29,3 +29,6 @@
 [submodule "genode-Utilization"]
 	path = genode-Utilization
 	url = https://github.com/argos-research/genode-Utilization
+[submodule "genode-CheckpointRestore-SharedMemory"]
+	path = genode-CheckpointRestore-SharedMemory
+	url = https://github.com/argos-research/genode-CheckpointRestore-SharedMemory.git
