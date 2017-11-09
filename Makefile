@@ -67,6 +67,7 @@ build_dir:
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-AdmCtrl\n' >> $(VAGRANT_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Synchronization\n' >> $(VAGRANT_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Utilization\n' >> $(VAGRANT_BUILD_CONF)
+	printf 'REPOSITORIES += $$(GENODE_DIR)/../toolchain-host\n' >> $(VAGRANT_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-CheckpointRestore-SharedMemory\n' >> $(VAGRANT_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/repos/dde_linux\n' >> $(VAGRANT_BUILD_CONF)
 	printf 'MAKE += -j4' >> $(VAGRANT_BUILD_CONF)
@@ -85,6 +86,7 @@ jenkins_build_dir:
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-AdmCtrl\n' >> $(JENKINS_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Synchronization\n' >> $(JENKINS_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Utilization\n' >> $(JENKINS_BUILD_CONF)
+	printf 'REPOSITORIES += $$(GENODE_DIR)/../toolchain-host\n' >> $(JENKINS_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-CheckpointRestore-SharedMemory\n' >> $(JENKINS_BUILD_CONF)
 	printf 'REPOSITORIES += $$(GENODE_DIR)/repos/dde_linux\n' >> $(JENKINS_BUILD_CONF)
 	printf 'MAKE += -j' >> $(JENKINS_BUILD_CONF)
@@ -156,3 +158,15 @@ dhcp-stop:
 clean-network: dhcp-stop vde-stop
 #
 # ================================================================
+
+# ================================================================
+# Compile task for toolchain host
+tasks:
+	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) cond_42
+	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) cond_mod
+	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) hey
+	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) idle
+	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) linpack
+	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) namaste
+	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) pi
+	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) tumatmul
