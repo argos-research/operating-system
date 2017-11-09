@@ -170,3 +170,11 @@ tasks:
 	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) namaste
 	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) pi
 	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) tumatmul
+	cp $(JENKINS_GENODE_BUILD_DIR)/cond_42/cond_42 toolchain-host/host_dom0
+	cp $(JENKINS_GENODE_BUILD_DIR)/cond_mod/cond_mod toolchain-host/host_dom0
+	cp $(JENKINS_GENODE_BUILD_DIR)/hey/hey toolchain-host/host_dom0
+	cp $(JENKINS_GENODE_BUILD_DIR)/idle/idle toolchain-host/host_dom0
+	cp $(JENKINS_GENODE_BUILD_DIR)/linpack/linpack toolchain-host/host_dom0
+	cp $(JENKINS_GENODE_BUILD_DIR)/namaste/namaste toolchain-host/host_dom0
+	cp $(JENKINS_GENODE_BUILD_DIR)/pi/pi toolchain-host/host_dom0
+	cp $(JENKINS_GENODE_BUILD_DIR)/tumatmul/tumatmul toolchain-host/host_dom0
