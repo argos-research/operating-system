@@ -134,10 +134,27 @@ packages:
 # ================================================================
 # VDE setup. Do once per system session. DHCP is optional.
 vde: vde-stop
-	@vde_switch -d -s /tmp/switch1
+	#See what going on on the switch with command vdeterm /tmp/mgmt
+	#then call port/allprint to see what is on the ports 
+	@vde_switch -d -s /tmp/switch1 -M /tmp/mgmt
 	@sudo vde_tunctl -u $(USER) -t tap0
 	@sudo ifconfig tap0 192.168.217.20 up
 	@sudo route add -host 192.168.217.21 dev tap0
+	#provides a NAT/masquerating service, so mosquitto can be used
+	#is required for the pcs in the practical course room
+	#Nevertheless genode must be configured with static IP until problems
+	#there got fixed.
+	#Standard network provided by slirpvde is
+	#10.0.2.2/24
+	#DNS server 10.0.2.3
+	#DHCP-Range Startaddress 10.0.2.15
+	#for further detail see man slirpvde
+	#might restrict connections started from outside of the switch to inside
+	#!!!Be carefull!
+	@slirpvde -s /tmp/switch1 --dhcp
+	# can be used for non practical course room setups
+	# provides more freedom considering the network connections
+	# if slirpvde is configured vde_plug2tap can be ignored
 	@vde_plug2tap --daemon -s /tmp/switch1 tap0
 
 vde-stop:
