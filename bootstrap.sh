@@ -9,6 +9,9 @@
 #
 # Contributor: Bernhard Blieninger
 ##############################
-systemctl stop NetworkManager.service
-ip a add 192.168.217.20/24 dev enp0s8
+
+
+#systemctl stop NetworkManager.service
+ip a add 10.200.40.1/21 dev enp0s8
 ip l set up dev enp0s8
+systemctl start isc-dhcp-server.service
