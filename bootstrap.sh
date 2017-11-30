@@ -14,4 +14,7 @@
 #systemctl stop NetworkManager.service
 ip a add 10.200.40.1/21 dev enp0s8
 ip l set up dev enp0s8
+# copy config for dhcp server
+cp /vagrant/config-data/dhcpd.conf /etc/dhcp/dhcpd.conf
+# start dhcp server
 systemctl start isc-dhcp-server.service
