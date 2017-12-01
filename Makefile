@@ -138,9 +138,8 @@ packages:
 # VDE setup. Do once per system session. DHCP is optional.
 vde: vde-stop
 	@vde_switch -d -s /tmp/switch1
-	@sudo vde_tunctl -u $(USER) -t tap0
-	@sudo ifconfig tap0 192.168.217.20 up
-	@sudo route add -host 192.168.217.21 dev tap0
+	@sudo vde_tunctl -u $(USER) -t tap0	
+	@sudo ifconfig tap0 10.200.40.10 up
 	@vde_plug2tap --daemon -s /tmp/switch1 tap0
 
 vde-stop:
@@ -148,6 +147,7 @@ vde-stop:
 	@-sudo vde_tunctl -d tap0
 	@-rm -rf /tmp/switch1
 
+#Needs rework to use isc-dhcp instead
 dhcp: dhcp-stop
 	@slirpvde -d -s /tmp/switch1 -dhcp
 
