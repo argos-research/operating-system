@@ -137,7 +137,7 @@ packages:
 # ================================================================
 # VDE setup. Do once per system session. DHCP is optional.
 vde: vde-stop
-	@vde_switch -d -s /tmp/switch1
+	@vde_switch -d -s /tmp/switch1 -M /tmp/mgmt
 	@sudo vde_tunctl -u $(USER) -t tap0	
 	@sudo ifconfig tap0 10.200.40.10 up
 	@vde_plug2tap --daemon -s /tmp/switch1 tap0
