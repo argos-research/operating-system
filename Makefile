@@ -142,11 +142,15 @@ vde: vde-stop
 	@sudo ip link set dev tap0 address 76:5e:06:6a:7e:87
 	@sudo ifconfig tap0 10.200.40.10 up
 	@vde_plug2tap --daemon -s /tmp/switch1 tap0
+	@sudo cp config-data/dhcpd.conf /etc/dhcp/dhcpd.conf
+	@sudo cp config-data/isc-dhcp-server /etc/default/isc-dhcp-server
+	@sudo service isc-dhcp-server start
 
 vde-stop:
 	@-pkill vde_switch
 	@-sudo vde_tunctl -d tap0
 	@-rm -rf /tmp/switch1
+	@sudo service isc-dhcp-server stop
 
 #Needs rework to use isc-dhcp instead
 dhcp: dhcp-stop
