@@ -37,18 +37,10 @@ toolchain:
 
 # ================================================================
 # Download Genode external sources. Only needs to be done once per system.
-ports: foc libports dde_linux
-
-foc:
-	./genode/tool/ports/prepare_port focnados
-
-libports:
-	./genode/tool/ports/prepare_port libc
-	./genode/tool/ports/prepare_port lwip
-	./genode/tool/ports/prepare_port stdcxx
-
-dde_linux:
-	./genode/tool/ports/prepare_port dde_linux
+ports:
+	for port in focnados libc lwip stdcxx dde_linux ; do \
+		./genode/tool/ports/prepare_port $$port ; \
+done
 #
 # ================================================================
 
@@ -58,18 +50,12 @@ dde_linux:
 
 build_dir:
 	genode/tool/create_builddir $(GENODE_TARGET) BUILD_DIR=$(VAGRANT_GENODE_BUILD_DIR)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/repos/libports\n' >> $(VAGRANT_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-dom0-HW\n' >> $(VAGRANT_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Taskloader\n' >> $(VAGRANT_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Parser\n' >> $(VAGRANT_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Monitoring\n' >> $(VAGRANT_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-schedulerTest\n' >> $(VAGRANT_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-AdmCtrl\n' >> $(VAGRANT_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Synchronization\n' >> $(VAGRANT_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Utilization\n' >> $(VAGRANT_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../toolchain-host\n' >> $(VAGRANT_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-CheckpointRestore-SharedMemory\n' >> $(VAGRANT_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/repos/dde_linux\n' >> $(VAGRANT_BUILD_CONF)
+
+	for repo in repos/libports ../genode-dom0-HW ../genode-Taskloader ../genode-Parser ../genode-Monitoring ../genode-AdmCtrl ../genode-Synchronization ../genode-Utilization ../toolchain-host ../genode-CheckpointRestore-SharedMemory repos/dde_linux ../../genode-tasks ; do \
+		printf 'REPOSITORIES += $$(GENODE_DIR)/' >> $(VAGRANT_BUILD_CONF) ; \
+		printf $$repo >> $(VAGRANT_BUILD_CONF) ; \
+		printf '\n' >> $(VAGRANT_BUILD_CONF) ; \
+	done
 	printf 'MAKE += -j4' >> $(VAGRANT_BUILD_CONF)
 ifneq (,$(findstring if13praktikum, $(shell groups)))
 	printf 'CROSS_DEV_PREFIX=/var/tmp/usr/local/genode-gcc/bin/genode-arm-\n' >> $(VAGRANT_TOOLS_CONF)
@@ -77,28 +63,22 @@ endif
 
 jenkins_build_dir:
 	genode/tool/create_builddir $(GENODE_TARGET) BUILD_DIR=$(JENKINS_GENODE_BUILD_DIR)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/repos/libports\n' >> $(JENKINS_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-dom0-HW\n' >> $(JENKINS_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Taskloader\n' >> $(JENKINS_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Parser\n' >> $(JENKINS_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Monitoring\n' >> $(JENKINS_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-schedulerTest\n' >> $(JENKINS_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-AdmCtrl\n' >> $(JENKINS_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Synchronization\n' >> $(JENKINS_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-Utilization\n' >> $(JENKINS_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../toolchain-host\n' >> $(JENKINS_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/../genode-CheckpointRestore-SharedMemory\n' >> $(JENKINS_BUILD_CONF)
-	printf 'REPOSITORIES += $$(GENODE_DIR)/repos/dde_linux\n' >> $(JENKINS_BUILD_CONF)
-	printf 'MAKE += -j' >> $(JENKINS_BUILD_CONF)
+
+	for repo in repos/libports ../genode-dom0-HW ../genode-Taskloader ../genode-Parser ../genode-Monitoring ../genode-AdmCtrl ../genode-Synchronization ../genode-Utilization ../toolchain-host ../genode-CheckpointRestore-SharedMemory repos/dde_linux ../../genode-tasks ; do \
+		printf 'REPOSITORIES += $$(GENODE_DIR)/' >> $(JENKINS_BUILD_CONF) ; \
+		printf $$repo >> $(JENKINS_BUILD_CONF) ; \
+		printf '\n' >> $(JENKINS_BUILD_CONF) ; \
+	done
+	printf 'MAKE += -j4' >> $(JENKINS_BUILD_CONF)
 	echo "CROSS_DEV_PREFIX=$(shell pwd)/usr/local/genode-gcc/bin/genode-arm-" >> $(JENKINS_TOOLS_CONF)
 
 
 # Delete build directory for all target systems. In some cases, subfolders in the contrib directory might be corrupted. Remove manually and re-prepare if necessary.
 clean:
-	rm -rf $(VAGRANT_GENODE_BUILD_DIR)
+	$(MAKE) -C $(VAGRANT_GENODE_BUILD_DIR) cleanall
 
 jenkins_clean:
-	rm -rf $(JENKINS_GENODE_BUILD_DIR)
+	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) cleanall
 #
 # ================================================================
 
@@ -167,19 +147,7 @@ clean-network: dhcp-stop vde-stop
 # ================================================================
 # Compile task for toolchain host
 tasks:
-	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) cond_42
-	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) cond_mod
-	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) hey
-	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) idle
-	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) linpack
-	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) namaste
-	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) pi
-	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) tumatmul
-	cp $(JENKINS_GENODE_BUILD_DIR)/cond_42/cond_42 toolchain-host/host_dom0
-	cp $(JENKINS_GENODE_BUILD_DIR)/cond_mod/cond_mod toolchain-host/host_dom0
-	cp $(JENKINS_GENODE_BUILD_DIR)/hey/hey toolchain-host/host_dom0
-	cp $(JENKINS_GENODE_BUILD_DIR)/idle/idle toolchain-host/host_dom0
-	cp $(JENKINS_GENODE_BUILD_DIR)/linpack/linpack toolchain-host/host_dom0
-	cp $(JENKINS_GENODE_BUILD_DIR)/namaste/namaste toolchain-host/host_dom0
-	cp $(JENKINS_GENODE_BUILD_DIR)/pi/pi toolchain-host/host_dom0
-	cp $(JENKINS_GENODE_BUILD_DIR)/tumatmul/tumatmul toolchain-host/host_dom0
+	for task in cond_42 cond_mod hey idle linpack namaste pi tumatmul ; do \
+		$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) $$task ; \
+		cp $(JENKINS_GENODE_BUILD_DIR)/$$task/$$task toolchain-host/host_dom0 ; \
+	done
