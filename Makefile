@@ -45,8 +45,7 @@ ports:
 # ================================================================
 # Genode build process. Rebuild subtargets as needed.
 
-CUSTOM_REPOS = $(wildcard genode-*)
-CUSTOM_REPOS += $(wildcard ../genode-*)
+CUSTOM_REPOS = $(wildcard genode-*) $(wildcard ../genode-*) toolchain-host
 
 build_dir:
 #	Create build directory
