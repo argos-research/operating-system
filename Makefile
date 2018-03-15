@@ -45,28 +45,49 @@ ports:
 # ================================================================
 # Genode build process. Rebuild subtargets as needed.
 
+CUSTOM_REPOS = $(wildcard genode-*)
+CUSTOM_REPOS += $(wildcard ../genode-*)
+
 build_dir:
+#	Create build directory
 	genode/tool/create_builddir $(GENODE_TARGET) BUILD_DIR=$(VAGRANT_GENODE_BUILD_DIR)
 
-	for repo in repos/libports ../genode-dom0-HW ../genode-Taskloader ../genode-Parser ../genode-Monitoring ../genode-AdmCtrl ../genode-Synchronization ../genode-Utilization ../toolchain-host ../genode-CheckpointRestore-SharedMemory repos/dde_linux ../../genode-tasks ; do \
-		printf 'REPOSITORIES += $$(GENODE_DIR)/' >> $(VAGRANT_BUILD_CONF) ; \
-		printf $$repo >> $(VAGRANT_BUILD_CONF) ; \
-		printf '\n' >> $(VAGRANT_BUILD_CONF) ; \
+#	Uncomment libports and dde_linux from etc/build.conf
+	for repo in libports dde_linux ; do \
+		sed -i "/$$repo/s/^#REPOSITORIES/REPOSITORIES/g" $(VAGRANT_BUILD_CONF) ; \
 	done
-	printf 'MAKE += -j4' >> $(VAGRANT_BUILD_CONF)
+
+#	Add our custom repositories to etc/build.conf
+	for repo in $(CUSTOM_REPOS); do \
+		echo "REPOSITORIES += \$$(GENODE_DIR)/../$$repo" >> $(VAGRANT_BUILD_CONF) ; \
+	done
+
+#	Speedup of the build process
+	echo "MAKE += -j4" >> $(VAGRANT_BUILD_CONF)
+
+#	Add toolchain path to etc/specs.conf
 ifneq (,$(findstring if13praktikum, $(shell groups)))
-	printf 'CROSS_DEV_PREFIX=/var/tmp/usr/local/genode-gcc/bin/genode-arm-\n' >> $(VAGRANT_TOOLS_CONF)
+	echo "CROSS_DEV_PREFIX=/var/tmp/usr/local/genode-gcc/bin/genode-arm-" >> $(VAGRANT_TOOLS_CONF)
 endif
 
 jenkins_build_dir:
+#	Create build directory
 	genode/tool/create_builddir $(GENODE_TARGET) BUILD_DIR=$(JENKINS_GENODE_BUILD_DIR)
 
-	for repo in repos/libports ../genode-dom0-HW ../genode-Taskloader ../genode-Parser ../genode-Monitoring ../genode-AdmCtrl ../genode-Synchronization ../genode-Utilization ../toolchain-host ../genode-CheckpointRestore-SharedMemory repos/dde_linux ../../genode-tasks ; do \
-		printf 'REPOSITORIES += $$(GENODE_DIR)/' >> $(JENKINS_BUILD_CONF) ; \
-		printf $$repo >> $(JENKINS_BUILD_CONF) ; \
-		printf '\n' >> $(JENKINS_BUILD_CONF) ; \
+#	Uncomment libports and dde_linux from etc/build.conf
+	for repo in libports dde_linux ; do \
+		sed -i "/$$repo/s/^#REPOSITORIES/REPOSITORIES/g" $(JENKINS_BUILD_CONF) ; \
 	done
-	printf 'MAKE += -j4' >> $(JENKINS_BUILD_CONF)
+
+#	Add our custom repositories to etc/build.conf
+	for repo in $(CUSTOM_REPOS); do \
+		echo "REPOSITORIES += \$$(GENODE_DIR)/../$$repo" >> $(JENKINS_BUILD_CONF) ; \
+	done
+
+#	Speedup of the build process
+	echo "MAKE += -j4" >> $(JENKINS_BUILD_CONF)
+
+#	Add toolchain path to etc/specs.conf
 	echo "CROSS_DEV_PREFIX=$(shell pwd)/usr/local/genode-gcc/bin/genode-arm-" >> $(JENKINS_TOOLS_CONF)
 
 
