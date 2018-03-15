@@ -37,9 +37,7 @@ toolchain:
 # ================================================================
 # Download Genode external sources. Only needs to be done once per system.
 ports:
-	for port in focnados libc lwip stdcxx dde_linux ; do \
-		./genode/tool/ports/prepare_port $$port ; \
-done
+	./genode/tool/ports/prepare_port -j4 focnados libc lwip stdcxx dde_linux
 #
 # ================================================================
 
