@@ -50,14 +50,21 @@ endif
 # ================================================================
 # Genode build process. Rebuild subtargets as needed.
 
+# ================================================================
+# Link the genode-world repository into genode/repos/world.
+world:
+	ln -sfn $(shell pwd)/genode-world $(shell pwd)/genode/repos/world
+#
+# ================================================================
+
 CUSTOM_REPOS = $(wildcard genode-*) $(wildcard ../genode-*) toolchain-host
 
-build_dir:
+build_dir: world
 #	Create build directory
 	genode/tool/create_builddir $(GENODE_TARGET) BUILD_DIR=$(VAGRANT_GENODE_BUILD_DIR)
 
 #	Uncomment libports and dde_linux from etc/build.conf
-	for repo in libports dde_linux ; do \
+	for repo in libports dde_linux world ; do \
 		sed -i "/$$repo/s/^#REPOSITORIES/REPOSITORIES/g" $(VAGRANT_BUILD_CONF) ; \
 	done
 
@@ -74,12 +81,12 @@ ifneq (,$(findstring if13praktikum, $(shell groups)))
 	echo "CROSS_DEV_PREFIX=/var/tmp/usr/local/genode-gcc/bin/genode-arm-" >> $(VAGRANT_TOOLS_CONF)
 endif
 
-jenkins_build_dir:
+jenkins_build_dir: world
 #	Create build directory
 	genode/tool/create_builddir $(GENODE_TARGET) BUILD_DIR=$(JENKINS_GENODE_BUILD_DIR)
 
 #	Uncomment libports and dde_linux from etc/build.conf
-	for repo in libports dde_linux ; do \
+	for repo in libports dde_linux world ; do \
 		sed -i "/$$repo/s/^#REPOSITORIES/REPOSITORIES/g" $(JENKINS_BUILD_CONF) ; \
 	done
 
