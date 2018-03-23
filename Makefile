@@ -36,8 +36,13 @@ toolchain:
 
 # ================================================================
 # Download Genode external sources. Only needs to be done once per system.
+PORTS_LST = focnados libc lwip stdcxx dde_linux
 ports:
-	./genode/tool/ports/prepare_port -j4 focnados libc lwip stdcxx dde_linux
+ifeq (jenkins, $(USER))
+	./genode/tool/ports/prepare_port -j $(PORTS_LST)
+else
+	./genode/tool/ports/prepare_port -j4 $(PORTS_LST)
+endif
 #
 # ================================================================
 
@@ -84,7 +89,11 @@ jenkins_build_dir:
 	done
 
 #	Speedup of the build process
+ifeq (jenkins, $(USER))
+	echo "MAKE += -j" >> $(JENKINS_BUILD_CONF)
+else
 	echo "MAKE += -j4" >> $(JENKINS_BUILD_CONF)
+endif
 
 #	Add toolchain path to etc/specs.conf
 	echo "CROSS_DEV_PREFIX=$(shell pwd)/usr/local/genode-gcc/bin/genode-arm-" >> $(JENKINS_TOOLS_CONF)
