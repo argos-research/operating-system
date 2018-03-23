@@ -126,11 +126,11 @@ jenkins_run:
 # ================================================================
 # Requiered packages for relaunched systems
 packages:
-	sudo apt-get update
-	sudo apt-get install libncurses5-dev texinfo autogen autoconf2.64 g++ libexpat1-dev \
+	sudo apt-get update -qq
+	sudo apt-get install -qq libncurses5-dev texinfo autogen autoconf2.64 g++ libexpat1-dev \
 			     flex bison gperf cmake libxml2-dev libtool zlib1g-dev libglib2.0-dev \
 			     make pkg-config gawk subversion expect git libxml2-utils syslinux \
-			     xsltproc yasm iasl lynx unzip qemu
+			     xsltproc yasm iasl lynx unzip qemu tftpd-hpa isc-dhcp-server
 #
 # ================================================================
 
