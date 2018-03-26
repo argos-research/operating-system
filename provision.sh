@@ -30,9 +30,6 @@ if [ $(groups | grep -o "if13praktikum") ]; then
 else
   sudo tar xPfj genode-toolchain-16.05-x86_64.tar.bz2
 fi
-# download and extract libports
-# wget -nc --quiet https://nextcloud.os.in.tum.de/s/KVfFOeRXVszFROl/download -O libports.tar.bz2
-# tar xfj libports.tar.bz2 -C genode
 if [ $USER == "ubuntu" ]; then
   # prepare ports, ...
   sudo make vagrant
