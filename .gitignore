@@ -9,3 +9,5 @@ usr
 
 /.vagrant/
 /*console.log
+
+genode-toolchain-16.05-x86_64.tar.bz2

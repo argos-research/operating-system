@@ -8,20 +8,18 @@
 #
 # Contributor: Bernhard Blieninger
 ######################
-if [ $USER == "ubuntu" ]; then
-  make packages
+
+if [ $USER == "ubuntu" ] || [ $USER == "vagrant" ]; then
+  cd /vagrant
   # uncomment the following line if you want to 'visually' access the virtual machine
-  #sudo apt-get install alsa-base alsa-utils pulseaudio pulseaudio-utils ubuntu-desktop
+  #sudo apt-get install -qq alsa-base alsa-utils pulseaudio pulseaudio-utils ubuntu-desktop
+  sudo apt-get install -qq make
+  make packages
 fi
 
-# change directory to /vagrant
-if [ $USER == "ubuntu" ]; then
-  cd /vagrant
-fi
-# clean contrib
-rm -rf genode/contrib/
 # initialize and update submodules
 git submodule update --init
+
 # download and extract toolchain
 wget -nc --quiet https://sourceforge.net/projects/genode/files/genode-toolchain/16.05/genode-toolchain-16.05-x86_64.tar.bz2/download -O genode-toolchain-16.05-x86_64.tar.bz2
 if [ $(groups | grep -o "if13praktikum") ]; then
@@ -30,17 +28,14 @@ if [ $(groups | grep -o "if13praktikum") ]; then
 else
   sudo tar xPfj genode-toolchain-16.05-x86_64.tar.bz2
 fi
-if [ $USER == "ubuntu" ]; then
-  # prepare ports, ...
-  sudo make vagrant
-  # change owner of /build
-  sudo chown -R ubuntu /build
-  # change password of user ubuntu to vagrant
-  echo ubuntu:vagrant | sudo chpasswd
-else
-  # prepare ports, ...
-  make vagrant
+
+if [ $USER == "ubuntu" ] || [ $USER == "vagrant" ]; then
+  # create /build folder
+  sudo mkdir -p /build
+  sudo chown -R $USER /build
 fi
+# prepare ports, create build dir
+make vagrant
 
 if [ $(groups | grep -o "if13praktikum") ]; then
   echo Adding /usr/local/dist/DIR/f13 to PATH
