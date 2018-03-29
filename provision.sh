@@ -8,25 +8,18 @@
 #
 # Contributor: Bernhard Blieninger
 ######################
-if [ $USER == "ubuntu" ]; then
-  sudo apt-get update -qq
-  sudo apt-get upgrade -qq
-  sudo apt-get install libncurses5-dev texinfo autogen autoconf2.64 g++ \
-  libexpat1-dev flex bison gperf cmake libxml2-dev libtool zlib1g-dev \
-  libglib2.0-dev make pkg-config gawk subversion expect git libxml2-utils \
-  syslinux xsltproc yasm iasl lynx unzip qemu tftpd-hpa isc-dhcp-server -qq
+
+if [ $USER == "ubuntu" ] || [ $USER == "vagrant" ]; then
+  cd /vagrant
   # uncomment the following line if you want to 'visually' access the virtual machine
-  #sudo apt-get install alsa-base alsa-utils pulseaudio pulseaudio-utils ubuntu-desktop
+  #sudo apt-get install -qq alsa-base alsa-utils pulseaudio pulseaudio-utils ubuntu-desktop
+  sudo apt-get install -qq make
+  make packages
 fi
 
-# change directory to /vagrant
-if [ $USER == "ubuntu" ]; then
-  cd /vagrant
-fi
-# clean contrib
-rm -rf genode/contrib/
 # initialize and update submodules
 git submodule update --init
+
 # download and extract toolchain
 wget -nc --quiet https://sourceforge.net/projects/genode/files/genode-toolchain/16.05/genode-toolchain-16.05-x86_64.tar.bz2/download -O genode-toolchain-16.05-x86_64.tar.bz2
 if [ $(groups | grep -o "if13praktikum") ]; then
@@ -35,20 +28,14 @@ if [ $(groups | grep -o "if13praktikum") ]; then
 else
   sudo tar xPfj genode-toolchain-16.05-x86_64.tar.bz2
 fi
-# download and extract libports
-# wget -nc --quiet https://nextcloud.os.in.tum.de/s/KVfFOeRXVszFROl/download -O libports.tar.bz2
-# tar xfj libports.tar.bz2 -C genode
-if [ $USER == "ubuntu" ]; then
-  # prepare ports, ...
-  sudo make vagrant
-  # change owner of /build
-  sudo chown -R ubuntu /build
-  # change password of user ubuntu to vagrant
-  echo ubuntu:vagrant | sudo chpasswd
-else
-  # prepare ports, ...
-  make vagrant
+
+if [ $USER == "ubuntu" ] || [ $USER == "vagrant" ]; then
+  # create /build folder
+  sudo mkdir -p /build
+  sudo chown -R $USER /build
 fi
+# prepare ports, create build dir
+make vagrant
 
 if [ $(groups | grep -o "if13praktikum") ]; then
   echo Adding /usr/local/dist/DIR/f13 to PATH
