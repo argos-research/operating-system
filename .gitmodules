@@ -1,7 +1,3 @@
-[submodule "genode"]
-	path = genode
-	url = https://github.com/argos-research/genode
-	branch = focnados
 [submodule "genode-dom0-HW"]
 	path = genode-dom0-HW
 	url = https://github.com/argos-research/genode-dom0-HW
@@ -17,9 +13,6 @@
 [submodule "toolchain-host"]
 	path = toolchain-host
 	url = https://github.com/argos-research/toolchain-host
-[submodule "genode-schedulerTest"]
-	path = genode-schedulerTest
-	url = https://github.com/argos-research/genode-schedulerTest.git
 [submodule "genode-Synchronization"]
 	path = genode-Synchronization
 	url = https://github.com/argos-research/genode-Synchronization
@@ -35,3 +28,6 @@
 [submodule "genode-world"]
 	path = genode-world
 	url = https://github.com/argos-research/genode-world.git
+[submodule "genode"]
+	path = genode
+	url = https://github.com/malsami/genode
