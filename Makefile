@@ -190,5 +190,5 @@ clean-network: dhcp-stop vde-stop
 tasks:
 	for task in cond_42 cond_mod hey idle linpack namaste pi tumatmul ; do \
 		$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) $$task ; \
-		cp $(JENKINS_GENODE_BUILD_DIR)/$$task/$$task toolchain-host/host_dom0 ; \
+		cp $(JENKINS_GENODE_BUILD_DIR)/$$task/$$task ../bin/ ; \
 	done
