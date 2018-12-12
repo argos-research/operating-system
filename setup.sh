@@ -1,7 +1,6 @@
 target="GENODE_TARGET = "$1
 echo $target
 git submodule update --init
-make packages
 make toolchain
 rm -rf genode/contrib
 make ports
