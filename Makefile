@@ -58,7 +58,12 @@ jenkins_build_dir: world
 
 #	Comment default start with display from etc/build.conf
 	for opt in "-display sdl"; do \
-	sed -i "/$$opt/s/^/#/g" $(JENKINS_BUILD_CONF) ; \
+		sed -i "/$$opt/s/^/#/g" $(JENKINS_BUILD_CONF) ; \
+	done
+
+#	Do not run qemu
+	for run_opt in "QEMU_RUN_OPT"; do \
+		sed -i "/$$run_opt/s/^/#/g" $(JENKINS_BUILD_CONF) ; \
 	done
 
 #	Add our custom repositories to etc/build.conf
@@ -88,14 +93,6 @@ jenkins_clean:
 # Run Genode with an active dom0 server.
 jenkins_run:
 	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) run/$(PROJECT) #declare which run file to run
-
-#
-# ================================================================
-
-# ================================================================
-# Run Genode with an active dom0 server.
-jenkins_just_build:
-	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) $(PROJECT) #declare which run file to run
 
 #
 # ================================================================
