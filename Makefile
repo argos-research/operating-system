@@ -93,6 +93,14 @@ jenkins_run:
 # ================================================================
 
 # ================================================================
+# Run Genode with an active dom0 server.
+jenkins_just_build:
+	$(MAKE) -C $(JENKINS_GENODE_BUILD_DIR) $(PROJECT) #declare which run file to run
+
+#
+# ================================================================
+
+# ================================================================
 # Requiered packages for relaunched systems
 packages:
 	sudo apt-get update -qq
