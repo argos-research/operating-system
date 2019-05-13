@@ -1,7 +1,8 @@
-git checkout 18.02
-git submodule update --init
+#!/bin/bash
+git checkout $2
+git submodule pdate --init
 make packages
 make toolchain
 make ports
-make jenkins_build_dir "GENODE_TARGET = focnados_pbxa9"
-make jenkins_run "GENODE_TARGET = focnados_pbxa9"
+make jenkins_build_dir "GENODE_TARGET = $1"
+make jenkins_run "GENODE_TARGET = $1"
