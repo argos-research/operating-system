@@ -3,7 +3,13 @@
 
 
 ##
-# USAGE: GENODE_TARGET=rpi3 bash deployscript.sh 'make jenkins_run' genode-dom0-HW/run/dom0-HW.run 02:03:03:00:00: 1 20  build/genode-rpi3 dom0-HW/uImage
+# This script helps you build different versions of Genode images. It was used to generate genode rpi2/3 images, which where then transferred to a TFTP-Server directory from where they are send to the hardware
+#components when requested. Other than genode images that are used in MaLSAMi, these images need each a different MAC address to get the correct TFTP instructions as well as the correct IP from the DHCP server.
+#The script can also be reused to build images with other configurational requirements. If yu want to do so, please adopt line 30 (sed command) and following accordingly
+
+# Description of the subparts
+#         SET build target                     select command to execute   file to change mac address in     mac address prefix  build start value  build end value   build image to move
+# USAGE: GENODE_TARGET=rpi3 bash deployscript.sh 'make jenkins_run'        genode-dom0-HW/run/dom0-HW.run    02:03:03:00:00:     1                  20                build/genode-rpi3 dom0-HW/uImage
 ##
 
 commando=$1;
