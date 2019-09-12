@@ -26,7 +26,8 @@ cat $filetochange | grep mac;
 #running command
 $commando;
 #Generating folder for current build
-mkdir -p $folder/var/run/batch/$i;
+z=$(printf "%02d" $i) 
+mkdir -p $folder/var/run/batch/$z;
 #Moving build to numbered folder
 mv $folder/var/run/$filetosave $folder/var/run/batch/$i/;
 done
